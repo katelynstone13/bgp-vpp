@@ -18,6 +18,21 @@
   version = "v0.4.1"
 
 [[projects]]
+  branch = "master"
+  digest = "1:7ad4018d69277983cf0e35e44b7a1900647b36ec545f650071b8e7413c83859b"
+  name = "github.com/contiv/vpp"
+  packages = [
+    "plugins/contivconf/config",
+    "plugins/crd/pkg/apis/nodeconfig",
+    "plugins/crd/pkg/apis/nodeconfig/v1",
+    "plugins/ipnet/restapi",
+    "plugins/netctl/remote",
+    "plugins/nodesync/vppnode",
+  ]
+  pruneopts = ""
+  revision = "49796c8d0585728912be9208d866f24fed98ba58"
+
+[[projects]]
   digest = "1:600d64f7857a14d7715ce2795868c76b85e634fc13aba93b23431039fed2d9ea"
   name = "github.com/coreos/etcd"
   packages = [
@@ -131,6 +146,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:107b233e45174dbab5b1324201d092ea9448e58243ab9f039e4c0f332e121e3a"
+  name = "github.com/golang/glog"
+  packages = ["."]
+  pruneopts = ""
+  revision = "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
+
+[[projects]]
+  branch = "master"
   digest = "1:529d738b7976c3848cae5cf3a8036440166835e389c1f617af701eeb12a0518d"
   name = "github.com/golang/protobuf"
   packages = [
@@ -143,6 +166,14 @@
   ]
   pruneopts = ""
   revision = "b5d812f8a3706043e23a9cd5babf2e5423744d30"
+
+[[projects]]
+  branch = "master"
+  digest = "1:754f77e9c839b24778a4b64422236d38515301d2baeb63113aa3edc42e6af692"
+  name = "github.com/google/gofuzz"
+  packages = ["."]
+  pruneopts = ""
+  revision = "24818f796faf91cd76ec7bddd72458fbced7a6c1"
 
 [[projects]]
   digest = "1:a3c01bbe8766cbce019cdb900aa51460a6f7bd4266a18d80722dc92297302bc3"
@@ -192,8 +223,8 @@
   version = "v1.0.2"
 
 [[projects]]
-  branch = "dev"
-  digest = "1:8d64b7459e58eeb0665110fa096b78ce052fd377c3666c93713a1362695c8096"
+  branch = "master"
+  digest = "1:d2d7e8b4e911edbcdde2e37008161d858bc16fe328cf62f048c3e3f4ec30227c"
   name = "github.com/ligato/cn-infra"
   packages = [
     "agent",
@@ -225,14 +256,14 @@
     "utils/safeclose",
   ]
   pruneopts = ""
-  revision = "900a7284ac2c39c30e278571a2cafeb7bc82b051"
+  revision = "1009a1eda9ba369c0aea207b8ecea13cd109f350"
 
 [[projects]]
-  branch = "dev"
-  digest = "1:f6c1d52f6d0e8b5cafb2b0aea6b7f6a4d0fbaf48869c56a7ec4494b47afee8fb"
+  digest = "1:f97f583b1babf9dbd1bc9d4c179aab3ccca1db9ae2403dbb65cbbad407040e8a"
   name = "github.com/ligato/vpp-agent"
   packages = [
     "api/genericmanager",
+    "pkg/metrics",
     "pkg/models",
     "plugins/kvscheduler",
     "plugins/kvscheduler/api",
@@ -242,7 +273,8 @@
     "plugins/orchestrator",
   ]
   pruneopts = ""
-  revision = "ce323d83abb29cdc1eaa582f95ff0981deec574b"
+  revision = "8b9cbb72c6dd2a8d2096f1d003b2f67b70f36214"
+  version = "v2.0.1"
 
 [[projects]]
   digest = "1:961dc3b1d11f969370533390fdf203813162980c858e1dabe827b60940c909a5"
@@ -312,12 +344,12 @@
   version = "v0.8.1"
 
 [[projects]]
-  digest = "1:7f569d906bdd20d906b606415b7d794f798f91a62fcfb6a4daa6d50690fb7a3f"
+  branch = "master"
+  digest = "1:47081c00d00c1dfc9a530c2556e78be391a5c24db1043efe6d406af882a169a1"
   name = "github.com/satori/go.uuid"
   packages = ["."]
   pruneopts = ""
-  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
-  version = "v1.2.0"
+  revision = "b2ce2384e17bbe0c6d34077efa39dbab3e09123b"
 
 [[projects]]
   digest = "1:9a3c631555e0351fdc4e696577bb63afd90c399d782a8462dba9d100d7021db3"
@@ -426,6 +458,8 @@
   name = "golang.org/x/net"
   packages = [
     "context",
+    "html",
+    "html/atom",
     "http/httpguts",
     "http2",
     "http2/hpack",
@@ -520,6 +554,14 @@
   version = "v1.19.0"
 
 [[projects]]
+  digest = "1:75fb3fcfc73a8c723efde7777b40e8e8ff9babf30d8c56160d01beffea8a95a6"
+  name = "gopkg.in/inf.v0"
+  packages = ["."]
+  pruneopts = ""
+  revision = "d2d2541c53f18d2a059457998ce2876cc8e67cbf"
+  version = "v0.9.1"
+
+[[projects]]
   digest = "1:cedccf16b71e86db87a24f8d4c70b0a855872eb967cb906a66b95de56aefbd0d"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -527,10 +569,42 @@
   revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
   version = "v2.2.2"
 
+[[projects]]
+  digest = "1:b6b2fb7b4da1ac973b64534ace2299a02504f16bc7820cb48edb8ca4077183e1"
+  name = "k8s.io/apimachinery"
+  packages = [
+    "pkg/api/resource",
+    "pkg/apis/meta/v1",
+    "pkg/conversion",
+    "pkg/conversion/queryparams",
+    "pkg/fields",
+    "pkg/labels",
+    "pkg/runtime",
+    "pkg/runtime/schema",
+    "pkg/selection",
+    "pkg/types",
+    "pkg/util/errors",
+    "pkg/util/intstr",
+    "pkg/util/json",
+    "pkg/util/net",
+    "pkg/util/runtime",
+    "pkg/util/sets",
+    "pkg/util/validation",
+    "pkg/util/validation/field",
+    "pkg/util/wait",
+    "pkg/watch",
+    "third_party/forked/golang/reflect",
+  ]
+  pruneopts = ""
+  revision = "103fd098999dc9c0c88536f5c9ad2e5da39373ae"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/contiv/vpp/plugins/ipnet/restapi",
+    "github.com/contiv/vpp/plugins/netctl/remote",
+    "github.com/contiv/vpp/plugins/nodesync/vppnode",
     "github.com/gogo/protobuf/gogoproto",
     "github.com/gogo/protobuf/proto",
     "github.com/golang/protobuf/ptypes",
@@ -540,6 +614,7 @@
     "github.com/ligato/cn-infra/datasync/kvdbsync",
     "github.com/ligato/cn-infra/datasync/kvdbsync/local",
     "github.com/ligato/cn-infra/datasync/resync",
+    "github.com/ligato/cn-infra/db/keyval",
     "github.com/ligato/cn-infra/db/keyval/etcd",
     "github.com/ligato/cn-infra/health/statuscheck",
     "github.com/ligato/cn-infra/infra",

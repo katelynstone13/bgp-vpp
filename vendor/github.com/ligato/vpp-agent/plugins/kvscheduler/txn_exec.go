@@ -339,7 +339,7 @@ func (s *Scheduler) applyDelete(node graph.NodeRW, txnOp *kvs.RecordedTxnOp, arg
 
 	// execute delete operation
 	descriptor := s.registry.GetDescriptorForKey(node.GetKey())
-	handler := &descriptorHandler{descriptor}
+	handler := newDescriptorHandler(descriptor)
 	if !args.dryRun && descriptor != nil {
 		if args.kv.origin != kvs.FromSB {
 			err = handler.delete(node.GetKey(), node.GetValue(), node.GetMetadata())
@@ -363,7 +363,7 @@ func (s *Scheduler) applyCreate(node graph.NodeRW, txnOp *kvs.RecordedTxnOp, arg
 
 	// get descriptor
 	descriptor := s.registry.GetDescriptorForKey(args.kv.key)
-	handler := &descriptorHandler{descriptor}
+	handler := newDescriptorHandler(descriptor)
 	if descriptor != nil {
 		node.SetFlags(&DescriptorFlag{descriptor.Name})
 		node.SetLabel(handler.keyLabel(args.kv.key))
@@ -504,7 +504,7 @@ func (s *Scheduler) applyUpdate(node graph.NodeRW, txnOp *kvs.RecordedTxnOp, arg
 
 	// validate new value
 	descriptor := s.registry.GetDescriptorForKey(args.kv.key)
-	handler := &descriptorHandler{descriptor}
+	handler := newDescriptorHandler(descriptor)
 	if !args.dryRun && args.kv.origin == kvs.FromNB {
 		err = handler.validate(node.GetKey(), node.GetValue())
 		if err != nil {
@@ -694,7 +694,9 @@ func (s *Scheduler) applyNewRelations(node graph.NodeRW, handler *descriptorHand
 				isRevert: args.kv.isRevert,
 			})
 		}
-		executed, err = s.applyDerived(obsoleteDerVals, args, false)
+		if len(obsoleteDerVals) > 0 {
+			executed, err = s.applyDerived(obsoleteDerVals, args, false)
+		}
 	}
 	return
 }
@@ -735,7 +737,10 @@ func (s *Scheduler) runDepUpdates(node graph.Node, args *applyValueArgs) (execut
 	}
 
 	var wasErr error
-	depNodes := node.GetSources(DependencyRelation)
+	var depNodes []graph.Node
+	for _, depPerLabel := range node.GetSources(DependencyRelation) {
+		depNodes = append(depNodes, depPerLabel.Nodes...)
+	}
 
 	// order depNodes by key (just for deterministic behaviour which simplifies testing)
 	sort.Slice(depNodes, func(i, j int) bool { return depNodes[i].GetKey() < depNodes[j].GetKey() })

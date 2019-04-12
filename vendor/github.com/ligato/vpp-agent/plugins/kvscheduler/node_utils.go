@@ -21,14 +21,18 @@ import (
 	"github.com/ligato/vpp-agent/plugins/kvscheduler/internal/utils"
 )
 
+func nodeToKVPairWithMetadata(node graph.Node) kvs.KVWithMetadata {
+	return kvs.KVWithMetadata{
+		Key:      node.GetKey(),
+		Value:    node.GetValue(),
+		Metadata: node.GetMetadata(),
+		Origin:   getNodeOrigin(node),
+	}
+}
+
 func nodesToKVPairsWithMetadata(nodes []graph.Node) (kvPairs []kvs.KVWithMetadata) {
 	for _, node := range nodes {
-		kvPairs = append(kvPairs, kvs.KVWithMetadata{
-			Key:      node.GetKey(),
-			Value:    node.GetValue(),
-			Metadata: node.GetMetadata(),
-			Origin:   getNodeOrigin(node),
-		})
+		kvPairs = append(kvPairs, nodeToKVPairWithMetadata(node))
 	}
 	return kvPairs
 }
@@ -41,7 +45,10 @@ func constructTargets(deps []kvs.Dependency, derives []kvs.KeyValuePair) (target
 			Relation: DependencyRelation,
 			Label:    dep.Label,
 			Key:      dep.Key,
-			Selector: dep.AnyOf,
+			Selector: graph.TargetSelector{
+				KeyPrefixes: dep.AnyOf.KeyPrefixes,
+				KeySelector: dep.AnyOf.KeySelector,
+			},
 		}
 		targets = append(targets, target)
 	}
@@ -51,7 +58,6 @@ func constructTargets(deps []kvs.Dependency, derives []kvs.KeyValuePair) (target
 			Relation: DerivesRelation,
 			Label:    derived.Key,
 			Key:      derived.Key,
-			Selector: nil,
 		}
 		targets = append(targets, target)
 	}
@@ -153,13 +159,17 @@ func sbBaseValsSelectors() []graph.FlagSelector {
 	}
 }
 
-// function returns selectors selecting values to be used for correlation for
-// the Dump operation of the given descriptor.
-func correlateValsSelectors(descriptor string) []graph.FlagSelector {
-	return []graph.FlagSelector{
-		graph.WithFlags(&DescriptorFlag{descriptor}),
-		graph.WithoutFlags(&UnavailValueFlag{}, &DerivedFlag{}),
+// function returns selectors selecting non-derived values belonging to the given
+// descriptor.
+func descrValsSelectors(descriptor string, onlyAvailable bool) []graph.FlagSelector {
+	descrSel := graph.WithFlags(&DescriptorFlag{descriptor})
+	baseSel := graph.WithoutFlags(&DerivedFlag{})
+	if onlyAvailable {
+		return []graph.FlagSelector{
+			descrSel, baseSel, graph.WithoutFlags(&UnavailValueFlag{}),
+		}
 	}
+	return []graph.FlagSelector{descrSel, baseSel}
 }
 
 // getNodeState returns state stored in the ValueState flag.

@@ -60,8 +60,16 @@ const (
 	// simulation (Retries are always first simulated)
 	defaultEnableTxnSimulation = false
 
+	// by default, a concise summary of every processed transactions is printed
+	// to stdout
+	defaultPrintTxnSummary = true
+
 	// name of the environment variable used to enable verification after every transaction
 	verifyModeEnv = "KVSCHED_VERIFY_MODE"
+
+	// name of the environment variable used to turn on automatic check for
+	// the preservation of the original network namespace after descriptor operations
+	checkNetNamespaceEnv = "KVSCHED_CHECK_NET_NS"
 
 	// name of the environment variable used to trigger log messages showing
 	// graph traversal
@@ -122,6 +130,7 @@ type Config struct {
 	TransactionHistoryAgeLimit    uint32 `json:"transaction-history-age-limit"`    // in minutes
 	PermanentlyRecordedInitPeriod uint32 `json:"permanently-recorded-init-period"` // in minutes
 	EnableTxnSimulation           bool   `json:"enable-txn-simulation"`
+	PrintTxnSummary               bool   `json:"print-txn-summary"`
 }
 
 // SchedulerTxn implements transaction for the KV scheduler.
@@ -145,6 +154,7 @@ func (s *Scheduler) Init() error {
 		TransactionHistoryAgeLimit:    defaultTransactionHistoryAgeLimit,
 		PermanentlyRecordedInitPeriod: defaultPermanentlyRecordedInitPeriod,
 		EnableTxnSimulation:           defaultEnableTxnSimulation,
+		PrintTxnSummary:               defaultPrintTxnSummary,
 	}
 
 	// load configuration
@@ -353,7 +363,7 @@ func (s *Scheduler) DumpValuesByDescriptor(descriptor string, view kvs.View) (va
 
 	// retrieve from the in-memory graph first (for Retrieve it is used for correlation)
 	inMemNodes := nodesToKVPairsWithMetadata(
-		graphR.GetNodes(nil, correlateValsSelectors(descriptor)...))
+		graphR.GetNodes(nil, descrValsSelectors(descriptor, true)...))
 
 	if view == kvs.CachedView {
 		// return the scheduler's view of SB for the given descriptor
